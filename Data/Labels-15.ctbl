@@ -1,0 +1,18 @@
+# Color table file /home2/rachel/P01/Github/MEMOS_simplified/KOMP2_simple.ctbl
+# 17 values
+1 lung_left 197 165 145 255
+2 lung_right 128 174 128 255
+3 kidney_left 185 102 83 255
+4 kidney_right 185 102 83 255
+5 stomach 216 101 79 255
+6 liver 78 63 0 255
+7 adrenal_left 255 250 220 255
+8 adrenal_right 230 220 70 255
+9 rectum 200 200 235 255
+10 bladder 250 250 210 255
+11 heart 0 151 206 255
+12 thymus_left 216 101 79 255
+13 thymus_right 183 156 220 255
+14 brain 214 230 130 255
+15 spinal_cord 244 214 49 255
+16 vertebrae 150 98 83 255
