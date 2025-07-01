@@ -1,7 +1,7 @@
 
 library(ANTsR)
 
-experiment = "intensityOnly"
+experiment = "labelIntensity"
 txPattern = "combinedFwdWarps"
 baseline = "WT"
 
