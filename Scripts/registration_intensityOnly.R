@@ -8,7 +8,6 @@ experiment = "intensityOnly"
 
 # Set Up Subfolders for Registration Output
   out.dir = paste0("./Results/", experiment)
-  dir.create(out.dir)
   
   out.dir.transforms = paste0(out.dir, "/Transforms")
   out.dir.txVol = paste0(out.dir, "/fwdTx_Volumes")
@@ -52,7 +51,7 @@ experiment = "intensityOnly"
                               typeofTransform = "antsRegistrationSyN[so]",
                               mask = ref.mask,
                               movingMask = mov.mask,
-                              initialTransforms = linear$fwdtransforms,
+                              initialTransform = linear$fwdtransforms,
                               outprefix = paste0(out.dir.transforms, "/", metadata$Subdirectory[i], "/", out.prefix, "Step1_"))
       
     tx.img.step1Linear = antsApplyTransforms(fixed = ref.image, 
@@ -74,7 +73,7 @@ experiment = "intensityOnly"
                               typeofTransform = "antsRegistrationSyN[so]",
                               mask = ref.mask,
                               movingMask = mov.mask,
-                              initialTransforms = step1$fwdtransforms,
+                              initialTransform = step1$fwdtransforms,
                               outprefix = paste0(out.dir.transforms, "/", metadata$Subdirectory[i], "/", out.prefix, "Step2_"))
 
     tx.img.step2 = antsApplyTransforms(fixed = ref.image, 
@@ -91,22 +90,29 @@ experiment = "intensityOnly"
     
     # Inverse labels
     print("Saving inverse-transformed labels")
-    inverse.labels = antsApplyTransforms(fixed = mov.image, 
+    inverse.labels1 = antsApplyTransforms(fixed = mov.image, 
+                                          moving = ref.label,
+                                          transformlist = step1$invtransforms,
+                                          whichtoinvert = c(T,F), 
+                                          interpolator = "genericLabel")
+    antsImageWrite(inverse.labels1, paste0(out.dir.txLab, "/", metadata$Subdirectory[i], "/",out.prefix, "step1-inverse-label.nii.gz"))
+    
+    
+    inverse.labels2 = antsApplyTransforms(fixed = mov.image, 
                                          moving = ref.label,
                                          transformlist = c(step1$invtransforms[1],
                                                            step1$invtransforms[2],
-                                                           step2$invtransforms[2]),
+                                                           step2$invtransforms[3]),
                                          whichtoinvert = c(T,F,F), 
                                          interpolator = "genericLabel")
-    antsImageWrite(inverse.labels, paste0(out.dir.txLab, "/", metadata$Subdirectory[i], "/",out.prefix, "inverse-label.nii.gz"))
+    antsImageWrite(inverse.labels2, paste0(out.dir.txLab, "/", metadata$Subdirectory[i], "/",out.prefix, "step2-inverse-label.nii.gz"))
     
-    remove(mov.image, mov.label, mov.mask, 
-           step1, step2, 
+    remove(mov.image, mov.label, mov.mask,
+           step1, step2,
            tx.img.step1Linear, tx.img.step1, tx.img.step2,
-           inverse.labels)
+           inverse.labels1, inverse.labels2)
     gc()
     
     print(paste0("Completed registration ", i, "/", nrow(metadata), ": ", ScanID))
     print(Sys.time()-start)
   }
-  
