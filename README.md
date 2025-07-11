@@ -3,11 +3,11 @@
 ## Prequisite:
 ANTsR library and its prequisites. There are multiple ways to install ANTsR. Please follow their [**Installation** instructions on their repository](https://github.com/ANTsX/ANTsR?tab=readme-ov-file#installation)
 
-install.packages(c("stringr", "dplyr", "ggplot2", "ggsignif", "viridis"))
+`install.packages(c("stringr", "dplyr", "ggplot2", "ggsignif", "viridis"))`
 
 
 ## To generate results
-All scripts are expected to run inside the cloned repository using the syntax below:
+All scripts are expected to be run inside the cloned repository using the syntax below:
 
 1. To run registration scripts: 
 	* `Rscript ./Scripts/registration_intensityOnly.R`
