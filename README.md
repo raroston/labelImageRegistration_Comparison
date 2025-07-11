@@ -3,6 +3,9 @@
 ## Prequisite:
 ANTsR library and its prequisites. There are multiple ways to install ANTsR. Please follow their [**Installation** instructions on their repository](https://github.com/ANTsX/ANTsR?tab=readme-ov-file#installation)
 
+install.packages(c("stringr", "dplyr", "ggplot2", "ggsignif", "viridis"))
+
+
 ## To generate results
 All scripts are expected to run inside the cloned repository using the syntax below:
 
@@ -13,3 +16,6 @@ All scripts are expected to run inside the cloned repository using the syntax be
 	* `Rscript ./Scripts/analysis_TBM.R`
 3. To run the PCA script:
 	* `Rscript ./Scripts/analysis_PCA.R`
+4. To run analysis of organ volumes:
+	* Note: this script does not save plots to drive
+	* `Rscript ./Scripts/analysis_organVolumes.R`

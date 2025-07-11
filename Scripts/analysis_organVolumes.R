@@ -119,7 +119,7 @@ for(i in 1:length(labelVolList)){
   relVol_multiReg_pvals[i, 1] = names(labelVolList)[i]
   relVol_multiReg_pvals[i, 2:4] = signif(my_summary$coefficients[, "Pr(>|t|)"], 3)
 }
-colnames(relVol_multReg_pvals) <- c("Organ", names(my_summary$coefficients[, "Pr(>|t|)"]))
+colnames(relVol_multiReg_pvals) <- c("Organ", names(my_summary$coefficients[, "Pr(>|t|)"]))
 
 
 ## Organ & body size scatter plot
