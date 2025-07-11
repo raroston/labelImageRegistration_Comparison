@@ -2,7 +2,7 @@
 # Rachel Roston, Ph.D.
 
 library(ANTsR)
-
+library(stringr)
 # intensity-only TBM
 experiment = "intensityOnly"
 txPattern = "combinedFwdWarps"
