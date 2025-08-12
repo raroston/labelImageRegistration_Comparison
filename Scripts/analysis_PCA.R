@@ -9,7 +9,7 @@ library(viridis)
   # intensity-only PCA
   
   experiment = "intensityOnly"
-  txPattern = "combinedFwdWarps"
+  txPattern = "combinedInverseWarps"
   baseline = "WT"
   
   {
@@ -129,7 +129,7 @@ library(viridis)
   # label-intensity PCA
   
   experiment = "labelIntensity"
-  txPattern = "combinedFwdWarps"
+  txPattern = "combinedInverseWarps"
   baseline = "WT"
   
   {
