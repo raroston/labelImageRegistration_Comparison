@@ -20,6 +20,7 @@ results=NULL
 label.order = c(11,5,3,1,6,10,2,4)
 
 for (i in 1:n) {
+  print(paste0("Starting ", i))
   intensityOnly.label = antsImageRead(dir(patt=paste0(metadata$ScanID[i], "__intensityOnly_step2"), path = './Results/intensityOnly/invTx_Labels/', recursive = TRUE, full.names = TRUE))
   mov.image = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Volumes/', full.names = TRUE) )
   mov.label = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Labels/', full.names = TRUE) )
@@ -27,6 +28,7 @@ for (i in 1:n) {
 
   # begin intensity registration leave one out 
   for (label in label.order) {
+    print(paste0("starting label ", label))
     ref.label.tmp = antsImageClone( ref.label)
     ref.label.tmp[ref.label==label] = 0 #remove the label being held.
     mov.label.tmp = antsImageClone( mov.label)
@@ -48,6 +50,7 @@ for (i in 1:n) {
     
     #Step2
     start.time = Sys.time()
+    paste0("Starting step2, ", Sys.time())
     step2 = antsRegistration(fixed = ref.image,
                              moving = mov.image,
                              typeofTransform = "antsRegistrationSyN[so]",
@@ -57,7 +60,6 @@ for (i in 1:n) {
     print(Sys.time()-start.time)
     
     # Inverse labels
-    start.time = Sys.time()
     ref.labels.in.subject.label = antsApplyTransforms(fixed = mov.image, 
                                           moving = ref.label,
                                           transformlist = c(step1$invtransforms[1],
@@ -84,6 +86,12 @@ for (i in 1:n) {
     overlap.int = labelOverlapMeasures(int.label , manual.label)[1,]
     overlap.label = labelOverlapMeasures(label.label , manual.label)[1,]
     
+    if(! file.exists("./Results/label_overlaps_appended.csv")) file.create("./Results/label_overlaps_appended.csv")
+    write.table(cbind(metadata$ScanID[i], overlap.int, overlap.label), 
+                file = "./Results/label_overlaps_appended.csv", 
+                append = T, sep = ",",
+                row.names = F,
+                col.names = F)
     results=rbind(results, cbind(metadata$ScanID[i], label, overlap.int, overlap.label))
     print(Sys.time()-start.time)
     
