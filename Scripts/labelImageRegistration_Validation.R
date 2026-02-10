@@ -1,10 +1,11 @@
 library(ANTsR)
+Sys.setenv(ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS = 24)
 
 out.dir = "./Results/validation_output/"
 dir.create(out.dir)
 
 out.table = "./Results/label_overlaps.csv" 
-file.create(out.table)
+if(!file.exists(out.table)) file.create(out.table)
 
 metadata = read.csv(file="./Data/scan_genotypes.csv")
 
@@ -20,11 +21,11 @@ ref.mask  = antsImageRead("./Data/Template/maskedtemplate0__lowRes-wholebody-lab
 n=nrow(metadata)
 results=NULL
 
-label.order = c(5,4,3) #c(5,4,3,10,15,7,8,11,2,1,6)
+label.order = c(5,4,3) #c(4,5,3,10,15,7,8,11,2,1,6)
 
 for (label in label.order) {
   for (i in 1:n) {
-    print(paste0("Starting ", i))
+    print(paste0("Starting specimen: ", i, "of ", n))
     intensityOnly.label = antsImageRead(dir(patt=paste0(metadata$ScanID[i], "__intensityOnly_step2"), path = './Results/intensityOnly/invTx_Labels/', recursive = TRUE, full.names = TRUE))
     mov.image = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Volumes/', full.names = TRUE) )
     mov.label = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Labels/', full.names = TRUE) )
@@ -90,16 +91,16 @@ for (label in label.order) {
     overlap.int = labelOverlapMeasures(int.label , manual.label)[1,]
     overlap.label = labelOverlapMeasures(label.label , manual.label)[1,]
     
-    overlap.table = read.csv(out.file)
-    if(nrow(overlap.table) < 1) {
-      write.table(cbind(metadata$ScanID[i], overlap.int, overlap.label), 
-                  file = out.file, 
-                  append = T, sep = ",",
+    results = cbind(ScanID = metadata$ScanID[i], Label.Omit = label, overlap.int, overlap.label)
+    if(length(readLines(out.table)) < 1) {
+      write.table(results, 
+                  file = out.table, 
+                  append = F, sep = ",",
                   row.names = F,
                   col.names = T)
     } else {
-      write.table(cbind(metadata$ScanID[i], overlap.int, overlap.label), 
-                  file = out.file, 
+      write.table(results, 
+                  file = out.table, 
                   append = T, sep = ",",
                   row.names = F,
                   col.names = F)
