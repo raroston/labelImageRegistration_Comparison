@@ -25,7 +25,7 @@ label.order = c(5,4,3) #c(4,5,3,10,15,7,8,11,2,1,6)
 
 for (label in label.order) {
   for (i in 1:n) {
-    print(paste0("Starting specimen: ", i, "of ", n))
+    print(paste0("Starting specimen: ", i, " of ", n))
     intensityOnly.label = antsImageRead(dir(patt=paste0(metadata$ScanID[i], "__intensityOnly_step2"), path = './Results/intensityOnly/invTx_Labels/', recursive = TRUE, full.names = TRUE))
     mov.image = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Volumes/', full.names = TRUE) )
     mov.label = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Labels/', full.names = TRUE) )
