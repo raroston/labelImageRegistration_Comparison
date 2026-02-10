@@ -3,6 +3,9 @@ library(ANTsR)
 out.dir = "./Results/validation_output/"
 dir.create(out.dir)
 
+out.table = "./Results/label_overlaps.csv" 
+file.create(out.table)
+
 metadata = read.csv(file="./Data/scan_genotypes.csv")
 
 ko = which(metadata$Genotype == "MUT/MUT")
@@ -17,17 +20,18 @@ ref.mask  = antsImageRead("./Data/Template/maskedtemplate0__lowRes-wholebody-lab
 n=nrow(metadata)
 results=NULL
 
-label.order = c(11,5,3,1,6,10,2,4)
+label.order = c(5,4,3) #c(5,4,3,10,15,7,8,11,2,1,6)
 
-for (i in 1:n) {
-  print(paste0("Starting ", i))
-  intensityOnly.label = antsImageRead(dir(patt=paste0(metadata$ScanID[i], "__intensityOnly_step2"), path = './Results/intensityOnly/invTx_Labels/', recursive = TRUE, full.names = TRUE))
-  mov.image = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Volumes/', full.names = TRUE) )
-  mov.label = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Labels/', full.names = TRUE) )
-  mov.mask = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Masks/', full.names = TRUE) )
-
-  # begin intensity registration leave one out 
-  for (label in label.order) {
+for (label in label.order) {
+  for (i in 1:n) {
+    print(paste0("Starting ", i))
+    intensityOnly.label = antsImageRead(dir(patt=paste0(metadata$ScanID[i], "__intensityOnly_step2"), path = './Results/intensityOnly/invTx_Labels/', recursive = TRUE, full.names = TRUE))
+    mov.image = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Volumes/', full.names = TRUE) )
+    mov.label = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Labels/', full.names = TRUE) )
+    mov.mask = antsImageRead(dir(patt=metadata$ScanID[i], path='./Data/Masks/', full.names = TRUE) )
+  
+    # begin intensity registration leave one out 
+  
     print(paste0("starting label ", label))
     ref.label.tmp = antsImageClone( ref.label)
     ref.label.tmp[ref.label==label] = 0 #remove the label being held.
@@ -86,17 +90,24 @@ for (i in 1:n) {
     overlap.int = labelOverlapMeasures(int.label , manual.label)[1,]
     overlap.label = labelOverlapMeasures(label.label , manual.label)[1,]
     
-    if(! file.exists("./Results/label_overlaps_appended.csv")) file.create("./Results/label_overlaps_appended.csv")
-    write.table(cbind(metadata$ScanID[i], overlap.int, overlap.label), 
-                file = "./Results/label_overlaps_appended.csv", 
-                append = T, sep = ",",
-                row.names = F,
-                col.names = F)
-    results=rbind(results, cbind(metadata$ScanID[i], label, overlap.int, overlap.label))
+    overlap.table = read.csv(out.file)
+    if(nrow(overlap.table) < 1) {
+      write.table(cbind(metadata$ScanID[i], overlap.int, overlap.label), 
+                  file = out.file, 
+                  append = T, sep = ",",
+                  row.names = F,
+                  col.names = T)
+    } else {
+      write.table(cbind(metadata$ScanID[i], overlap.int, overlap.label), 
+                  file = out.file, 
+                  append = T, sep = ",",
+                  row.names = F,
+                  col.names = F)
+    }
+    
     print(Sys.time()-start.time)
     
     remove(ref.label.tmp, mov.label.tmp, step1, step2, ref.labels.in.subject.label, manual.label, int.label, label.label, overlap.label, overlap.int)
     
   }
 }
-write.csv(file="./Results/label_overlaps.csv", results)
