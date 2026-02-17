@@ -21,7 +21,7 @@ ref.mask  = antsImageRead("./Data/Template/maskedtemplate0__lowRes-wholebody-lab
 n=nrow(metadata)
 results=NULL
 
-label.order = c(15,7,8,11,2,1,6) #c(5,4,3,10) #c(4,5,3,10,15,7,8,11,2,1,6)
+label.order = c(4,5,3,10,15,7,8,11,2,1,6,12,13,14,9)
 
 for (label in label.order) {
   for (i in 1:n) {
@@ -51,7 +51,8 @@ for (label in label.order) {
                                      fixedMask = ref.mask,
                                      movingMask = mov.mask,
                                      initialTransforms = "similarity",
-                                     typeOfDeformableTransform = "antsRegistrationSyN[so]")
+                                     typeOfDeformableTransform = "antsRegistrationSyN[so]",
+                                     outputPrefix = paste0(out.dir, "tmp-step1-"))
       print(paste0("Finished step1: ", Sys.time()-start.time))
       
       #Step2
@@ -62,7 +63,8 @@ for (label in label.order) {
                                typeofTransform = "antsRegistrationSyN[so]",
                                mask = ref.mask,
                                movingMask = mov.mask,
-                               initialTransform = step1$fwdtransforms)
+                               initialTransform = step1$fwdtransforms, 
+                               outprefix = paste0(out.dir, "tmp-step2-"))
       print(Sys.time()-start.time)
       
       # Inverse labels
