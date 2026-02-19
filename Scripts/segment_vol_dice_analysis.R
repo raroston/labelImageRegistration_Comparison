@@ -47,6 +47,7 @@ for(i in 1:nrow(diceCoeff.table)){
   }
 }
 diceCoeff.table$OrganName <- relevel(factor(diceCoeff.table$OrganName), ref = "All")
+write.csv(diceCoeff.table, "./Results/dice_table.csv")
 
 DicePlot <- ggplot(diceCoeff.table, aes(x = OrganName, y = MeanOverlap, color = OrganName)) +
   theme_bw() +
@@ -75,6 +76,7 @@ volumes = volumes[which(volumes$LabelValue !=0),]
 volumes$GenotypeRegtype = factor(paste0(volumes$Subdirectory, "-", volumes$RegType),
                                  levels = c("WT-M", "WT-IO", "WT-LI", "KO-M", "KO-IO", "KO-LI"),
                                  ordered = T)
+write.csv(volumes, "./Results/volumes_table.csv")
 
 organVolPlot <- ggplot(volumes, aes(x = GenotypeRegtype, y = Volume)) +
   theme_bw() +
