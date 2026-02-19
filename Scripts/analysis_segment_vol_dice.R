@@ -1,4 +1,5 @@
-
+# Calculate and plot Dice coefficients and volumes
+# Rachel Roston, Ph.D.
 
 library(ANTsR)
 library(ggplot2)
