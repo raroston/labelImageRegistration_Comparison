@@ -13,7 +13,7 @@ All scripts are expected to be run inside the cloned repository using the syntax
 	* `Rscript ./Scripts/registration_intensityOnly.R`
 	* `Rscript ./Scripts/registration_labelIntensity.R`
 2. To run analysis of organ volume and Dice calculations:
-	* `Rscript ./Scripts/segment_vol_dice_analysis.R`
+	* `Rscript ./Scripts/analysis_segment_vol_dice.R`
 3. To run TBM analysis script:
 	* `Rscript ./Scripts/analysis_TBM.R`
 4. To run the PCA script:
